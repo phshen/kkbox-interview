@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>{{data.action}} Contact</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput name="contactPerson" placeholder="姓名"
+    [(ngModel)]="data.contact.contactPerson" required>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="title" placeholder="職稱"
+    [(ngModel)]="data.contact.title" required>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="contactNumber" placeholder="電話"
+    [(ngModel)]="data.contact.contactNumber">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="email" placeholder="Email"
+    [(ngModel)]="data.contact.email">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel(data)">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" [disabled]="!data.contact.contactPerson||!data.contact.title">{{data.action}}</button>
+</div>
