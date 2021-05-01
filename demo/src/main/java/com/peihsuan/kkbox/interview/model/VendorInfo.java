@@ -1,13 +1,9 @@
-package com.peihsuan.kkbox.interview.entity;
+package com.peihsuan.kkbox.interview.model;
 
 import java.sql.Date;
+import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class VendorInfo {
-	@Id
 	private long id;
 	private String name;
 	private String applicant;
@@ -18,17 +14,20 @@ public class VendorInfo {
 	private String remark;
 	private Date updateTime;
 	
-	public VendorInfo(long id, String name, String applicant, String owner, String address, String tel, String fax, String remark, Date updateTime) {
-        this.id = id;
-        this.name = name;
-        this.applicant = applicant;
-        this.owner = owner;
-        this.address = address;
-        this.tel = tel;
-        this.fax = fax;
-        this.remark = remark;
-        this.updateTime = updateTime;
-    }
+	private List<ContactInfo> contacts;
+
+	public VendorInfo(long id, String name, String applicant, String owner, String address, String tel, String fax,
+			String remark, Date updateTime) {
+		this.id = id;
+		this.name = name;
+		this.applicant = applicant;
+		this.owner = owner;
+		this.address = address;
+		this.tel = tel;
+		this.fax = fax;
+		this.remark = remark;
+		this.updateTime = updateTime;
+	}
 
 	public long getId() {
 		return id;
@@ -101,6 +100,13 @@ public class VendorInfo {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	
-	
+
+	public List<ContactInfo> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<ContactInfo> contacts) {
+		this.contacts = contacts;
+	}
+
 }

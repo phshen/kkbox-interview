@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.peihsuan.kkbox.interview.entity.ContactInfo;
-import com.peihsuan.kkbox.interview.entity.ContactInfoMapper;
+import com.peihsuan.kkbox.interview.model.ContactInfo;
+import com.peihsuan.kkbox.interview.model.ContactInfoMapper;
 
 @Repository
 public class ContactInfoRepository {

@@ -1,4 +1,4 @@
-package com.peihsuan.kkbox.interview.entity;
+package com.peihsuan.kkbox.interview.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
