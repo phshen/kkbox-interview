@@ -1,6 +1,6 @@
 package com.peihsuan.kkbox.interview.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 public class VendorInfo {
@@ -16,6 +16,8 @@ public class VendorInfo {
 	
 	private List<ContactInfo> contacts;
 
+	public VendorInfo() {
+	};
 	public VendorInfo(long id, String name, String applicant, String owner, String address, String tel, String fax,
 			String remark, Date updateTime) {
 		this.id = id;

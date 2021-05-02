@@ -4,3 +4,22 @@ table {
 .vendor-list {
   margin-bottom: 5em;
 }
+
+.field-half {
+    margin-right: 3em;
+}
+.field-double {
+    width: 100%;
+    margin-right: 3em;
+}
+.vendor-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-row {
+  display: inline-flex !important;
+}
+table {
+  width: 100%;
+}

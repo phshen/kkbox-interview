@@ -1,3 +1,5 @@
+import { ContactInfo } from '../model/contact-info';
+
 export class VendorInfo {
     id: string = "";
     name: string = "";
@@ -8,4 +10,5 @@ export class VendorInfo {
     fax: string = "";
     remark: string = "";
     updateTime: string = "";
+    contacts: ContactInfo[] = [];
 }

@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
 
 import { VendorInfoService } from './service/vendor-info.service';
 import { HttpClientModule } from '@angular/common/http';
-import { VendorFormComponent, ContactDialogComponent } from './vendor-form/vendor-form.component';
-import { VendorListComponent } from './vendor-list/vendor-list.component';
+// import { VendorFormComponent, ContactDialogComponent } from './vendor-form/vendor-form.component';
+import { VendorListComponent, ContactDialogComponent, VendorDialogComponent } from './vendor-list/vendor-list.component';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,9 +19,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
-    VendorFormComponent,
+    // VendorFormComponent,
     VendorListComponent,
-    ContactDialogComponent
+    ContactDialogComponent,
+    VendorDialogComponent
   ],
   imports: [
     BrowserModule,

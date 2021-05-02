@@ -28,6 +28,14 @@ export class VendorFormComponent implements OnInit {
   onSubmit() {
     //this.userService.save(this.user).subscribe(result => this.gotoUserList());
     console.log(this.vendor, this.contacts);
+    this.contacts.pop(); // remove empty row
+    this.vendor.contacts = this.contacts;
+    this.vendorInfoService.saveVendor(this.vendor).subscribe(data => {
+      console.log("save success: ", data);
+    });
+    // clear form
+    // this.vendors.splice(rowIndex, 1);
+    // this.table!.renderRows();
   }
 
   addContact(newContact: ContactInfo) {

@@ -1,5 +1,6 @@
 package com.peihsuan.kkbox.interview.repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
@@ -62,8 +64,125 @@ public class VendorInfoRepository {
 	};
 
 	public List<VendorInfo> findAll() {
-		String sqlQuery = "select v.*, c.contact_person, c.title, c.contact_number, c.email from vendor_info v left join contact_info c on v.id = c.company_id";
+		String sqlQuery = "select v.*, c.* from vendor_info v left join contact_info c on v.id = c.company_id";
 
 		return jdbcTemplate.query(sqlQuery, resultSetExtractor);
+	}
+	
+	public List<ContactInfo> findContacts(long companyId) {
+		String sqlQuery = "select * from contact_info where company_id = ?";
+
+		return jdbcTemplate.query(sqlQuery, contactInfoMapper, companyId);
+	}
+
+	public VendorInfo find(long id) {
+		String sqlQuery = "select * from vendor_info v where v.id = ?";
+		return jdbcTemplate.queryForObject(sqlQuery, vendorInfoMapper, id);
+	}
+
+	public int getVendorCount() {
+		String sqlQuery = "select count(*) from vendor_info";
+
+		return jdbcTemplate.queryForObject(sqlQuery, Integer.class);
+	}
+
+	public Integer saveVendorInfo(VendorInfo vendorInfo) {
+		String sqlQuery = "INSERT INTO vendor_info (id, name, applicant, owner, address, tel, fax, remark) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		return jdbcTemplate.update(sqlQuery, 
+				vendorInfo.getId(), 
+				vendorInfo.getName(), 
+				vendorInfo.getApplicant(),
+				vendorInfo.getOwner(),
+				vendorInfo.getAddress(),
+				vendorInfo.getTel(),
+				vendorInfo.getFax(),
+				vendorInfo.getRemark());
+	}
+
+	public int[] saveContacts(List<ContactInfo> contacts, long companyId, String companyName) {
+		String sqlQuery = "INSERT INTO contact_info (company_id, company_name, contact_person, title, contact_number, email) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
+		return jdbcTemplate.batchUpdate(sqlQuery, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				ContactInfo contact = contacts.get(i);
+				ps.setLong(1, companyId);
+				ps.setString(2, companyName);
+				ps.setString(3, contact.getContactPerson());
+				ps.setString(4, contact.getTitle());
+				ps.setString(5, contact.getContactNumber());
+				ps.setString(6, contact.getEmail());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return contacts.size();
+			}
+
+		});
+	}
+	
+	public Integer updateVendorInfo(VendorInfo vendorInfo) {
+		String sqlQuery = "update vendor_info set applicant = ?, owner = ?, address = ?, tel = ?, fax = ?, remark = ? where id = ? ";
+		return jdbcTemplate.update(sqlQuery, 
+				vendorInfo.getApplicant(),
+				vendorInfo.getOwner(),
+				vendorInfo.getAddress(),
+				vendorInfo.getTel(),
+				vendorInfo.getFax(),
+				vendorInfo.getRemark(),
+				vendorInfo.getId());
+	}
+
+	public int[] updateContacts(List<ContactInfo> contacts) {
+		String sqlQuery = "update contact_info set contact_person = ?, title = ?, contact_number = ?, email = ? "
+				+ "where id = ? and company_id = ?";
+		return jdbcTemplate.batchUpdate(sqlQuery, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				ContactInfo contact = contacts.get(i);
+				ps.setString(1, contact.getContactPerson());
+				ps.setString(2, contact.getTitle());
+				ps.setString(3, contact.getContactNumber());
+				ps.setString(4, contact.getEmail());
+				ps.setInt(5, contact.getId());
+				ps.setLong(6, contact.getCompanyId());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return contacts.size();
+			}
+
+		});
+	}
+	
+	public Integer deleteVendorInfo(long id) {
+		String sqlQuery = "delete from vendor_info v where v.id = ?";
+		return jdbcTemplate.update(sqlQuery, id);
+	}
+
+	public Integer deleteContacts(long id) {
+		String sqlQuery = "delete from contact_info where company_id = ?";
+		return jdbcTemplate.update(sqlQuery, id);
+	}
+
+	public int[] deleteContacts(List<ContactInfo> contacts) {
+		String sqlQuery = "delete from contact_info where company_id = ? and id = ?";
+		return jdbcTemplate.batchUpdate(sqlQuery, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				ContactInfo contact = contacts.get(i);
+				ps.setLong(1, contact.getCompanyId());
+				ps.setInt(2, contact.getId());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return contacts.size();
+			}
+
+		});
 	}
 }
