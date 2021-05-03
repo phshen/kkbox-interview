@@ -4,22 +4,48 @@ table {
 .vendor-list {
   margin-bottom: 5em;
 }
-
-.field-half {
-    margin-right: 3em;
-}
-.field-double {
-    width: 100%;
-    margin-right: 3em;
-}
 .vendor-info {
     display: flex;
+    width: 90%;
     flex-direction: column;
-    align-items: center;
+    margin: auto;
+    border: groove;
 }
 .form-row {
   display: inline-flex !important;
 }
-table {
-  width: 100%;
+.section-layout {
+  width: 90%;
+  margin: auto;
+}
+.form-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 1em;
+}
+.footer {
+  margin-top: 5vh;
+}
+.action-button {
+  margin-right: 1em;
+}
+.action-col-width {
+  width: 200px !important;
+}
+.form-section-header {
+  text-align: center;
+}
+.address-field-width {
+  width: 83%;
+}
+.title-layout {
+  text-align: center;
+}
+.required-field {
+  color: red;
+  font-weight: bold;
+}
+.dialog-action-btn {
+  justify-content: flex-end;
 }

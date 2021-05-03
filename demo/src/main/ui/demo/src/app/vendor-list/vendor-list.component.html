@@ -1,162 +1,172 @@
+<h1 class="title-layout">廠商資料表</h1>
 <div class="vendor-list">
-  <h2>已儲存廠商</h2>
-  <table mat-table #vendorListTable [dataSource]="vendors" class="mat-elevation-z8">
-    <!-- name -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>公司名稱</th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
+  <div>
+    <h2 class="section-layout">已儲存廠商</h2>
+    <br>
+    <table mat-table #vendorListTable [dataSource]="vendors" class="mat-elevation-z8 section-layout">
+      <!-- name -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>公司名稱</th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
 
-    <!-- company id -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>統一編號</th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-    </ng-container>
+      <!-- company id -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>統一編號</th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
 
-    <!-- phone number -->
-    <ng-container matColumnDef="tel">
-      <th mat-header-cell *matHeaderCellDef>電話</th>
-      <td mat-cell *matCellDef="let element"> {{element.tel}} </td>
-    </ng-container>
+      <!-- phone number -->
+      <ng-container matColumnDef="tel">
+        <th mat-header-cell *matHeaderCellDef>電話</th>
+        <td mat-cell *matCellDef="let element"> {{element.tel}} </td>
+      </ng-container>
 
-    <!-- email -->
-    <ng-container matColumnDef="applicant">
-      <th mat-header-cell *matHeaderCellDef>填單人</th>
-      <td mat-cell *matCellDef="let element"> {{element.applicant}} </td>
-    </ng-container>
+      <!-- email -->
+      <ng-container matColumnDef="applicant">
+        <th mat-header-cell *matHeaderCellDef>填單人</th>
+        <td mat-cell *matCellDef="let element"> {{element.applicant}} </td>
+      </ng-container>
 
-    <!-- update time -->
-    <ng-container matColumnDef="updateTime">
-      <th mat-header-cell *matHeaderCellDef>更新時間</th>
-      <td mat-cell *matCellDef="let element"> {{element.updateTime}} </td>
-    </ng-container>
+      <!-- update time -->
+      <ng-container matColumnDef="updateTime">
+        <th mat-header-cell *matHeaderCellDef>更新時間</th>
+        <td mat-cell *matCellDef="let element"> {{element.updateTime}} </td>
+      </ng-container>
 
-    <!-- Action Column -->
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef> Action </th>
-      <td mat-cell *matCellDef="let element; let i = index">
-        <button mat-raised-button (click)="deleteVendor(element, i)">Delete</button>
-        <button mat-raised-button (click)="showEditData(element, i)">Edit</button>
-      </td>
-    </ng-container>
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef class="action-col-width">刪除/修改</th>
+        <td mat-cell *matCellDef="let element; let i = index" class="action-col-width">
+          <button mat-flat-button color="warn" (click)="deleteVendor(element, i)" class="action-button">Delete</button>
+          <button mat-flat-button color="primary" (click)="showEditData(element, i)" class="action-button">Edit</button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumnsForList"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnsForList;"></tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsForList"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsForList;"></tr>
+    </table>
+  </div>
 </div>
 
 <div class="vendor-info">
   <form (ngSubmit)="onSubmit(); vendorForm.reset()" #vendorForm="ngForm">
     <!-- vendor info -->
-    <div>
-      <h2>廠商基本資料</h2>
-      <div class="form-row">
-        <div>
-          <span class="field-half">填單人</span>
-          <mat-form-field appearance="outline" class="field-half">
+    <h2 class="form-section-header">廠商基本資料</h2>
+    <table class="section-layout">
+        <tr>
+          <td><span class="required-field">*</span>填單人</td>
+          <td>
+          <mat-form-field appearance="outline">
             <input matInput type="text" [(ngModel)]="vendor.applicant"
             class="form-control"
             id="applicant"
             name="applicant"
             placeholder="請輸入姓名"
             required #applicant="ngModel">
-            <mat-error *ngIf="applicant.invalid">填單人為必填欄位</mat-error>
+            <mat-error *ngIf="applicant.invalid && applicant.dirty">填單人為必填欄位</mat-error>
           </mat-form-field>
-        </div>
-        <div>
-          <span class="field-half">公司名稱</span>
-          <mat-form-field appearance="outline" class="field-half">
+          </td>
+
+          <td><span class="required-field">*</span>公司名稱</td>
+          <td>
+            <mat-form-field appearance="outline">
             <!-- <mat-label for="name">公司名稱</mat-label> -->
             <input matInput type="text" [(ngModel)]="vendor.name"
             class="form-control"
             id="name"
             name="name"s
             placeholder="請輸入公司名稱"
-            required #name="ngModel">
-            <mat-error *ngIf="name.invalid">公司名稱為必填欄位</mat-error>
+            required #name="ngModel" [disabled]="editAction">
+            <mat-error *ngIf="name.invalid && applicant.dirty">公司名稱為必填欄位</mat-error>
           </mat-form-field>
-        </div>
-      </div>
-      <div>
-        <span class="field-half">統一編號</span>
-        <mat-form-field appearance="outline" class="field-half">
-          <!-- <label for="id">統一編號</label> -->
-          <!-- <mat-label for="id">統一編號</mat-label> -->
-          <input matInput type="text" [(ngModel)]="vendor.id"
+          </td>
+        </tr>
+      <tr>
+        <td><span class="required-field">*</span>統一編號</td>
+        <td>
+        <mat-form-field appearance="outline">
+          <input matInput type="number" [(ngModel)]="vendor.id"
           class="form-control"
           id="id"
           name="id"
           placeholder="請輸入統一編號"
-          required #id="ngModel">
-          <mat-error *ngIf="id.invalid">統一編號為必填欄位</mat-error>
+          required #id="ngModel" [disabled]="editAction">
+          <mat-error *ngIf="id.invalid && applicant.dirty">統一編號為必填欄位</mat-error>
         </mat-form-field>
-        <span class="field-half">負責人</span>
-        <mat-form-field appearance="outline" class="field-half">
-          <!-- <mat-label for="name">公司名稱</mat-label> -->
+        </td>
+        <td><span class="required-field">*</span>負責人</td>
+        <td>
+        <mat-form-field appearance="outline">
           <input matInput type="text" [(ngModel)]="vendor.owner"
           class="form-control"
           id="owner"
           name="owner"
           placeholder="請輸入姓名"
           required #owner="ngModel">
-          <mat-error *ngIf="owner.invalid">負責人為必填欄位</mat-error>
+          <mat-error *ngIf="owner.invalid && applicant.dirty">負責人為必填欄位</mat-error>
         </mat-form-field>
-      </div>
-      <div>
-        <span class="field-half">地址</span>
-        <mat-form-field appearance="outline" class="field-half">
-          <!-- <mat-label for="name">公司名稱</mat-label> -->
+        </td>
+      </tr>
+      <tr>
+        <td><span class="required-field">*</span>地址</td>
+        <td colspan="3">
+        <mat-form-field appearance="outline" class="address-field-width">
           <input matInput type="text" [(ngModel)]="vendor.address"
           class="form-control"
           id="address"
           name="address"
           placeholder="請輸入公司地址"
           required #address="ngModel">
-          <mat-error *ngIf="address.invalid">地址為必填欄位</mat-error>
+          <mat-error *ngIf="address.invalid && applicant.dirty">地址為必填欄位</mat-error>
         </mat-form-field>
-      </div>
-      <div>
-        <span class="field-half">電話</span>
-        <mat-form-field appearance="outline" class="field-half">
-          <!-- <label for="id">統一編號</label> -->
-          <!-- <mat-label for="id">統一編號</mat-label> -->
-          <input matInput type="text" [(ngModel)]="vendor.tel"
+        </td>
+      </tr>
+      <tr>
+        <td>電話</td>
+        <td>
+        <mat-form-field appearance="outline">
+          <input matInput type="tel" [(ngModel)]="vendor.tel"
           class="form-control"
           id="tel"
           name="tel"
-          #tel="ngModel">
+          #tel="ngModel" tel>
         </mat-form-field>
-        <span class="field-half">傳真</span>
-        <mat-form-field appearance="outline" class="field-half">
-          <!-- <mat-label for="name">公司名稱</mat-label> -->
+        </td>
+        <td>傳真</td>
+        <td>
+        <mat-form-field appearance="outline">
           <input matInput type="text" [(ngModel)]="vendor.fax"
           class="form-control"
           id="fax"
           name="fax"
+          type="number"
           #fax="ngModel">
         </mat-form-field>
-      </div>
-      <div>
-        <span class="field-half">備註</span>
-        <mat-form-field appearance="outline" class="field-half">
-          <!-- <mat-label for="name">公司名稱</mat-label> -->
+        </td>
+      </tr>
+      <tr>
+        <td>備註</td>
+        <td>
+        <mat-form-field appearance="outline">
           <input matInput type="text" [(ngModel)]="vendor.remark"
           class="form-control"
           id="remark"
           name="remark"
           #remark="ngModel">
         </mat-form-field>
-      </div>
-    </div>
+        </td>
+      </tr>
+    </table>
 
     <!-- contact info -->
     <div>
-      <h2>聯絡人</h2>
-      <table mat-table #contactsTable [dataSource]="contacts" class="mat-elevation-z8">
+      <h2 class="form-section-header">聯絡人</h2>
+      <table mat-table #contactsTable [dataSource]="contacts" class="mat-elevation-z8 section-layout">
 
         <!-- name -->
         <ng-container matColumnDef="contactPerson">
-          <th mat-header-cell *matHeaderCellDef>姓名</th>
+          <th mat-header-cell *matHeaderCellDef><span class="required-field">*</span>姓名</th>
           <td mat-cell *matCellDef="let element; let i = index">
             {{element.contactPerson}}
           </td>
@@ -164,7 +174,7 @@
 
         <!-- job title -->
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef>職稱</th>
+          <th mat-header-cell *matHeaderCellDef><span class="required-field">*</span>職稱</th>
           <td mat-cell *matCellDef="let element">
             {{element.title}}
           </td>
@@ -188,14 +198,11 @@
 
         <!-- Action Column -->
         <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <th mat-header-cell *matHeaderCellDef class="action-col-width">新增/刪除/修改</th>
           <td mat-cell *matCellDef="let element; let i = index" class="action-link">
-            <!-- <a (click)="addContact(vendorForm.value)" *ngIf="i == contacts.length-1">Add</a>
-            <a (click)="editContact(element)" *ngIf="i != contacts.length-1">Edit</a>
-            <a (click)="deleteContact(element)" *ngIf="i != contacts.length-1">Delete</a> -->
-            <a (click)="openDialog('Add', element, i)" *ngIf="i == contacts.length-1">Add</a>
-            <a (click)="openDialog('Edit', element, i)" *ngIf="i != contacts.length-1">Edit</a>
-            <a (click)="openDialog('Delete', element, i)" *ngIf="i != contacts.length-1">Delete</a>
+            <a mat-flat-button color="primary" (click)="openDialog('Add', element, i)" *ngIf="i == contacts.length-1" class="action-button">Add</a>
+            <a mat-flat-button color="accent" (click)="openDialog('Edit', element, i)" *ngIf="i != contacts.length-1" class="action-button">Edit</a>
+            <a mat-flat-button color="warn" (click)="openDialog('Delete', element, i)" *ngIf="i != contacts.length-1" class="action-button">Delete</a>
           </td>
         </ng-container>
 
@@ -203,7 +210,12 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     </div>
-
-    <button mat-flat-button color="primary" type="submit" [disabled]="!vendorForm.form.valid || contacts.length == 1">Submit</button>
+    <br>
+    <br>
+    <div class="form-action">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!vendorForm.form.valid || contacts.length == 1">儲存</button>
+      <a mat-raised-button color="accent" (click)="vendorForm.reset();resetContacts()">清空重填</a>
+    </div>
   </form>
 </div>
+<footer class="footer"></footer>

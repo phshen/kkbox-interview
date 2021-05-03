@@ -10,14 +10,17 @@
   </mat-form-field>
   <mat-form-field>
     <input matInput name="contactNumber" placeholder="電話"
-    [(ngModel)]="data.contact.contactNumber">
+    [(ngModel)]="data.contact.contactNumber" #contactNumber="ngModel">
+    <mat-error *ngIf="contactNumber.invalid">格式錯誤</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput name="email" placeholder="Email"
-    [(ngModel)]="data.contact.email">
+    <input matInput name="email" placeholder="Email" type="email"
+    [(ngModel)]="data.contact.email" #email="ngModel" email>
+    <mat-error *ngIf="email.invalid">格式錯誤</mat-error>
   </mat-form-field>
+
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="cancel(data)">Cancel</button>
-  <button mat-button [mat-dialog-close]="data" [disabled]="!data.contact.contactPerson||!data.contact.title">{{data.action}}</button>
+<div mat-dialog-actions class="dialog-action-btn">
+  <button mat-raised-button (click)="cancel(data)">Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" [disabled]="!data.contact.contactPerson||!data.contact.title||email.invalid||contactNumber.invalid">{{data.action}}</button>
 </div>

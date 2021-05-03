@@ -3,6 +3,9 @@ package com.peihsuan.kkbox.interview.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,11 +42,15 @@ public class VendorInfoRestController {
 	}
 
 	@PostMapping("/saveVendor")
-	public List<VendorInfo> saveVendor(@RequestBody VendorInfo vendor) {
-		// ObjectMapper obj = new ObjectMapper();
-		// VendorInfo vendor = obj.convertValue(vendorInfo, VendorInfo.class);
-		vendorInfoService.saveVendor(vendor, vendor.getContacts());
-		return vendorInfoService.getVendors();
+	public ResponseEntity<?> saveVendor(@RequestBody VendorInfo vendor) {
+		try {
+			vendorInfoService.saveVendor(vendor, vendor.getContacts());
+		} catch (DuplicateKeyException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Company ID already exists.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(vendorInfoService.getVendors());
 	}
 
 	// @PostMapping("/saveContacts")

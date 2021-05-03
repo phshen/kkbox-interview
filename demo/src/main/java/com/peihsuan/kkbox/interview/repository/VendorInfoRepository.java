@@ -64,13 +64,13 @@ public class VendorInfoRepository {
 	};
 
 	public List<VendorInfo> findAll() {
-		String sqlQuery = "select v.*, c.* from vendor_info v left join contact_info c on v.id = c.company_id";
+		String sqlQuery = "select v.*, c.id as contact_id, c.company_id, c.company_name, c.contact_person, c.title, c.contact_number, c.email from vendor_info v left join contact_info c on v.id = c.company_id";
 
 		return jdbcTemplate.query(sqlQuery, resultSetExtractor);
 	}
 	
 	public List<ContactInfo> findContacts(long companyId) {
-		String sqlQuery = "select * from contact_info where company_id = ?";
+		String sqlQuery = "select c.id as contact_id, c.company_id, c.company_name, c.contact_person, c.title, c.contact_number, c.email from contact_info c where company_id = ?";
 
 		return jdbcTemplate.query(sqlQuery, contactInfoMapper, companyId);
 	}

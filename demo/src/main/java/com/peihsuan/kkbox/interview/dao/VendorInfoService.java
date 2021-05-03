@@ -27,34 +27,30 @@ public class VendorInfoService {
 	}
 	
 	public void saveVendor(VendorInfo vendor, List<ContactInfo> contacts) {
-		try {
-			logger.info("save new vendor: {}, {}", vendor.getId(), vendor.getName());
-			vendorInfoRepository.saveVendorInfo(vendor);
-			vendorInfoRepository.saveContacts(contacts, vendor.getId(), vendor.getName());
-		} catch (Exception e) {
-			logger.error("Fail to save vendor.", e);
-		}
+		logger.info("save new vendor: {}, {}", vendor.getId(), vendor.getName());
+		vendorInfoRepository.saveVendorInfo(vendor);
+		vendorInfoRepository.saveContacts(contacts, vendor.getId(), vendor.getName());
 	}
 
-	public Boolean saveContacts(List<ContactInfo> contacts) {
-		try {
-			logger.info("number of new contacts: {}", contacts.size());
-			int[] updateCount = vendorInfoRepository.saveContacts(contacts, contacts.get(0).getCompanyId(),
-					contacts.get(0).getCompanyName());
-			if (!updateCount.equals(contacts.size())) {
-				throw new Exception("Update count not match.");
-			}
-		} catch (Exception e) {
-			logger.error("Fail to save vendor.", e);
-			return false;
+	public void saveContacts(List<ContactInfo> contacts) throws Exception {
+		logger.info("number of new contacts: {}", contacts.size());
+		int[] updateCount = vendorInfoRepository.saveContacts(contacts, contacts.get(0).getCompanyId(),
+				contacts.get(0).getCompanyName());
+		if (updateCount.length != contacts.size()) {
+			throw new Exception("Update count not match.");
 		}
-		return true;
 	}
 
 	public void updateVendor(VendorInfo vendor) {
 		try {
 			logger.info("update exists vendor: {}, {}", vendor.getId(), vendor.getName());
 			vendorInfoRepository.updateVendorInfo(vendor);
+
+			deleteContacts(vendor.getId());
+			saveContacts(vendor.getContacts());
+
+			/* TODO: compare current contacts with new contacts */
+
 		} catch (Exception e) {
 			logger.error("Fail to update vendor.", e);
 		}
@@ -81,6 +77,21 @@ public class VendorInfoService {
 		} catch (Exception e) {
 			logger.error("Fail to delete vendor.", e);
 		}
+	}
+
+	public Boolean deleteContacts(long companyId) {
+		try {
+			logger.info("number of deleting exists contacts of company id: {}", companyId);
+			Integer currContactsCount = getContacts(companyId).size();
+			Integer deleteCount = vendorInfoRepository.deleteContacts(companyId);
+			if (!deleteCount.equals(currContactsCount)) {
+				throw new Exception("Delete count not match.");
+			}
+		} catch (Exception e) {
+			logger.error("Fail to delete vendor.", e);
+			return false;
+		}
+		return true;
 	}
 
 	public Boolean deleteContacts(List<ContactInfo> contacts) {

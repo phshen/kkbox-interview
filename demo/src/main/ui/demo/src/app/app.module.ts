@@ -6,9 +6,8 @@ import { AppComponent } from './app.component';
 
 import { VendorInfoService } from './service/vendor-info.service';
 import { HttpClientModule } from '@angular/common/http';
-// import { VendorFormComponent, ContactDialogComponent } from './vendor-form/vendor-form.component';
-import { VendorListComponent, ContactDialogComponent, VendorDialogComponent } from './vendor-list/vendor-list.component';
-import { FormsModule } from '@angular/forms';
+import { VendorListComponent, ContactDialogComponent } from './vendor-list/vendor-list.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,10 +18,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
-    // VendorFormComponent,
     VendorListComponent,
-    ContactDialogComponent,
-    VendorDialogComponent
+    ContactDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +31,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     BrowserAnimationsModule,
     MatInputModule,
     MatTableModule,
-    MatDialogModule
+    MatDialogModule,
+    ReactiveFormsModule
   ],
   providers: [VendorInfoService],
   bootstrap: [AppComponent]

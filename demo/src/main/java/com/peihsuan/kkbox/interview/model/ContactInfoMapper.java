@@ -14,7 +14,7 @@ public class ContactInfoMapper implements RowMapper<ContactInfo> {
 
 	@Override
 	public ContactInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
-		ContactInfo contactInfo = new ContactInfo(rs.getInt("id"), rs.getLong("company_id"),
+		ContactInfo contactInfo = new ContactInfo(rs.getInt("contact_id"), rs.getLong("company_id"),
 				rs.getString("company_name"), rs.getString("contact_person"), rs.getString("title"),
 				rs.getString("contact_number"), rs.getString("email"));
 		return contactInfo;

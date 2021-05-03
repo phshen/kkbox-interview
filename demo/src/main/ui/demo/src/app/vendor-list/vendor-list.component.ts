@@ -5,6 +5,7 @@ import { ContactInfo } from '../model/contact-info';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-vendor-list',
@@ -25,6 +26,10 @@ export class VendorListComponent implements OnInit {
   contacts: ContactInfo[] = [];
   displayedColumns: string[] = ['contactPerson', 'title', 'contactNumber', 'email', 'action'];
   editAction: boolean = false;
+
+  // phoneFormControl = new FormControl('', [
+  //   Validators.required, Validators.pattern('^\\([0-9]{2}\\)[0-9]{8}')
+  // ]);
 
   constructor(
     private vendorInfoService: VendorInfoService,
@@ -48,40 +53,22 @@ export class VendorListComponent implements OnInit {
     // this.vendors.splice(rowIndex, 1);
     // this.table!.renderRows();
   }
-  // editVendor(vendor: VendorInfo) {
-  //   console.log("edit: ", vendor);
-  //   this.vendorInfoService.updateVendor(vendor).subscribe(data => {
-  //     console.log("edit success: ", data);
-  //     this.vendors = data;
-  //     this.vendorListTable!.renderRows();
-  //   });
-  //   // this.vendors.splice(rowIndex, 1);
-  //   // this.table!.renderRows();
-  // }
+
   showEditData(obj: VendorInfo, rowIndex: number) {
-    this.vendor = obj;
-    this.contacts = obj.contacts;
+    const vendorCopy = JSON.parse(JSON.stringify(obj));
+    this.vendor = vendorCopy;
+    // const contacts: ContactInfo[] = [];
+    // contacts.push(obj.contacts);
+    // contacts.push(new ContactInfo());
+    this.contacts = this.vendor.contacts
     this.contacts.push(new ContactInfo());
     this.editAction = true;
-  }
-  openVendorDialog(obj: VendorInfo, rowIndex: number) {
-    const dialogRef = this.vendorDialog.open(VendorDialogComponent, {
-      width: '60vw',
-      disableClose: true,
-      data: obj
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        console.log("result", result);
-        // this.editVendor(result);
-      }
-    });
   }
 
   /***** form *****/
   onSubmit() {
     console.log(this.vendor, this.contacts);
+    if(!this.checkFormat(this.vendor.id)) return;
     this.contacts.pop(); // remove empty row
     this.vendor.contacts = this.contacts;
     if(!this.editAction) {
@@ -90,6 +77,14 @@ export class VendorListComponent implements OnInit {
           // update data
           this.vendors = data;
           this.vendorListTable!.renderRows();
+      }, error => {
+        console.log(error);
+        if(error.status == 409) {
+          window.alert("統一編號不可重複");
+        } else {
+          window.alert(error.error);
+        }
+
       });
     } else {
       this.vendorInfoService.updateVendor(this.vendor).subscribe(data => {
@@ -103,9 +98,19 @@ export class VendorListComponent implements OnInit {
     this.resetContacts();
   }
 
+  checkFormat(id: string): boolean {
+    const regex = new RegExp('\\d{8}');
+    if(!regex.test(id)) {
+      window.alert("統一編號格式錯誤");
+      return false;
+    }
+    return true;
+  }
+
   resetContacts() {
     this.contacts = [];
     this.contacts.push(new ContactInfo);
+    this.editAction = false;
   }
 
   addContact(newContact: ContactInfo) {
@@ -153,7 +158,8 @@ export class VendorListComponent implements OnInit {
 
 @Component({
     selector: 'contact-dialog',
-    templateUrl: 'contact-dialog.html',
+    templateUrl: './contact-dialog.html',
+    styleUrls: ['./vendor-list.component.css']
   })
   export class ContactDialogComponent {
     // contact: ContactInfo = new ContactInfo();
@@ -161,10 +167,6 @@ export class VendorListComponent implements OnInit {
       public dialogRef: MatDialogRef<ContactDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: any
     ) {
-      // this.contact.contactPerson = data.contact.contactPerson;
-      // this.contact.title = data.contact.title;
-      // this.contact.contactNumber = data.contact.contactNumber;
-      // this.contact.email = data.contact.email;
     }
 
     cancel(obj: any) {
@@ -179,24 +181,3 @@ export class VendorListComponent implements OnInit {
     }
 }
 
-@Component({
-    selector: 'vendor-dialog',
-    templateUrl: 'vendor-dialog.html',
-  })
-  export class VendorDialogComponent {
-    // contact: ContactInfo = new ContactInfo();
-    constructor(
-      public dialogRef: MatDialogRef<VendorDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public vendor: VendorInfo
-    ) {
-      // this.contact.contactPerson = data.contact.contactPerson;
-      // this.contact.title = data.contact.title;
-      // this.contact.contactNumber = data.contact.contactNumber;
-      // this.contact.email = data.contact.email;
-    }
-
-    cancel(obj: any) {
-      console.log("cancel ", obj);
-      this.dialogRef.close();
-    }
-}
