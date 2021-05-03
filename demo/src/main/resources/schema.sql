@@ -7,7 +7,7 @@ CREATE TABLE vendor_info (
   tel varchar(100),
   fax varchar(100),
   remark varchar(100),
-  update_time date default sysdate
+  update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE contact_info (

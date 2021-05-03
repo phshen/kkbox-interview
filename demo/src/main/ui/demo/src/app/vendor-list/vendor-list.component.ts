@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, Directive, Input } from '@angular/core';
 import { VendorInfoService } from '../service/vendor-info.service';
 import { VendorInfo } from '../model/vendor-info';
 import { ContactInfo } from '../model/contact-info';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, Validators } from '@angular/forms';
-
+// import { FormControl, Validators } from '@angular/forms';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 @Component({
   selector: 'app-vendor-list',
   templateUrl: './vendor-list.component.html',
@@ -77,10 +77,11 @@ export class VendorListComponent implements OnInit {
           // update data
           this.vendors = data;
           this.vendorListTable!.renderRows();
+          window.alert("儲存成功");
       }, error => {
         console.log(error);
         if(error.status == 409) {
-          window.alert("統一編號不可重複");
+          window.alert("統一編號已存在");
         } else {
           window.alert(error.error);
         }
@@ -101,7 +102,7 @@ export class VendorListComponent implements OnInit {
   checkFormat(id: string): boolean {
     const regex = new RegExp('\\d{8}');
     if(!regex.test(id)) {
-      window.alert("統一編號格式錯誤");
+      window.alert("統一編號須為八位數字");
       return false;
     }
     return true;
@@ -181,3 +182,62 @@ export class VendorListComponent implements OnInit {
     }
 }
 
+export function telValidator(nameRe: RegExp): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const valid = control.pristine || (control.touched && control.value.length > 0 && nameRe.test(control.value));
+    return valid ? null : {telNumber: {value: control.value}};
+  };
+}
+
+@Directive({
+  selector: '[telValidator]',
+  providers: [{provide: NG_VALIDATORS, useExisting: TelValidatorDirective, multi: true}]
+})
+export class TelValidatorDirective implements Validator {
+  @Input('telValidator') telNumber?: string;
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    return this.telNumber ? telValidator(new RegExp('^\\d{2,3}-\\d{7,8}$'))(control)
+                              : null;
+  }
+}
+
+export function companyIdValidator(re: RegExp): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const valid = control.pristine || (control.touched && control.value.length > 0 && re.test(control.value));
+    return valid ? null : {companyId: {value: control.value}};
+  };
+}
+
+@Directive({
+  selector: '[companyIdValidator]',
+  providers: [{provide: NG_VALIDATORS, useExisting: CompanyIdValidatorDirective, multi: true}]
+})
+export class CompanyIdValidatorDirective implements Validator {
+  @Input('companyIdValidator') companyId?: string;
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    return this.companyId ? companyIdValidator(new RegExp('^\\d{8}$'))(control)
+                              : null;
+  }
+}
+
+export function phoneValidator(nameRe: RegExp): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const valid = control.pristine || (control.touched && control.value.length > 0 && nameRe.test(control.value));
+    return valid ? null : {phoneNumber: {value: control.value}};
+  };
+}
+
+@Directive({
+  selector: '[phoneValidator]',
+  providers: [{provide: NG_VALIDATORS, useExisting: PhoneValidatorDirective, multi: true}]
+})
+export class PhoneValidatorDirective implements Validator {
+  @Input('phoneValidator') phoneNumber?: string;
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    return this.phoneNumber ? phoneValidator(new RegExp('^\\d{4}-\\d{6}$'))(control)
+                              : null;
+  }
+}

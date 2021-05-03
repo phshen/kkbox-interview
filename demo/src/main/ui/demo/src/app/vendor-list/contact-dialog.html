@@ -1,26 +1,30 @@
 <h1 mat-dialog-title>{{data.action}} Contact</h1>
 <div mat-dialog-content>
   <mat-form-field>
-    <input matInput name="contactPerson" placeholder="姓名"
+    <mat-label>姓名</mat-label>
+    <input matInput name="contactPerson"
     [(ngModel)]="data.contact.contactPerson" required>
   </mat-form-field>
   <mat-form-field>
-    <input matInput name="title" placeholder="職稱"
+    <mat-label>職稱</mat-label>
+    <input matInput name="title"
     [(ngModel)]="data.contact.title" required>
   </mat-form-field>
   <mat-form-field>
-    <input matInput name="contactNumber" placeholder="電話"
+    <mat-label>電話</mat-label>
+    <input matInput name="contactNumber" placeholder="ex: 0912-345678" phoneValidator="data.contact.contactNumber"
     [(ngModel)]="data.contact.contactNumber" #contactNumber="ngModel">
-    <mat-error *ngIf="contactNumber.invalid">格式錯誤</mat-error>
+    <mat-error *ngIf="contactNumber.value && contactNumber.errors && contactNumber.errors.phoneNumber">格式錯誤</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput name="email" placeholder="Email" type="email"
+    <mat-label>Email</mat-label>
+    <input matInput name="email" placeholder="ex: me@example.com" type="email"
     [(ngModel)]="data.contact.email" #email="ngModel" email>
-    <mat-error *ngIf="email.invalid">格式錯誤</mat-error>
+    <mat-error *ngIf="email.invalid">Email 格式錯誤</mat-error>
   </mat-form-field>
 
 </div>
 <div mat-dialog-actions class="dialog-action-btn">
   <button mat-raised-button (click)="cancel(data)">Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="data" [disabled]="!data.contact.contactPerson||!data.contact.title||email.invalid||contactNumber.invalid">{{data.action}}</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" [disabled]="!data.contact.contactPerson||!data.contact.title||email.invalid||contactNumber.invalid">OK</button>
 </div>

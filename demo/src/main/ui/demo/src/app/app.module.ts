@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 
 import { VendorInfoService } from './service/vendor-info.service';
 import { HttpClientModule } from '@angular/common/http';
-import { VendorListComponent, ContactDialogComponent } from './vendor-list/vendor-list.component';
+import { VendorListComponent, ContactDialogComponent, PhoneValidatorDirective, CompanyIdValidatorDirective, TelValidatorDirective } from './vendor-list/vendor-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,7 +19,10 @@ import { MatDialogModule } from '@angular/material/dialog';
   declarations: [
     AppComponent,
     VendorListComponent,
-    ContactDialogComponent
+    ContactDialogComponent,
+    PhoneValidatorDirective,
+    CompanyIdValidatorDirective,
+    TelValidatorDirective
   ],
   imports: [
     BrowserModule,

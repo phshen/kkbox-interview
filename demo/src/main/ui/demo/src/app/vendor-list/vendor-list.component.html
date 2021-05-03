@@ -50,7 +50,7 @@
 </div>
 
 <div class="vendor-info">
-  <form (ngSubmit)="onSubmit(); vendorForm.reset()" #vendorForm="ngForm">
+  <form #vendorForm="ngForm">
     <!-- vendor info -->
     <h2 class="form-section-header">廠商基本資料</h2>
     <table class="section-layout">
@@ -64,7 +64,7 @@
             name="applicant"
             placeholder="請輸入姓名"
             required #applicant="ngModel">
-            <mat-error *ngIf="applicant.invalid && applicant.dirty">填單人為必填欄位</mat-error>
+            <mat-error *ngIf="applicant.invalid">填單人為必填欄位</mat-error>
           </mat-form-field>
           </td>
 
@@ -78,7 +78,7 @@
             name="name"s
             placeholder="請輸入公司名稱"
             required #name="ngModel" [disabled]="editAction">
-            <mat-error *ngIf="name.invalid && applicant.dirty">公司名稱為必填欄位</mat-error>
+            <mat-error *ngIf="name.invalid">公司名稱為必填欄位</mat-error>
           </mat-form-field>
           </td>
         </tr>
@@ -86,14 +86,19 @@
         <td><span class="required-field">*</span>統一編號</td>
         <td>
         <mat-form-field appearance="outline">
-          <input matInput type="number" [(ngModel)]="vendor.id"
+          <input matInput type="text" [(ngModel)]="vendor.id" companyIdValidator="vendor.id"
           class="form-control"
           id="id"
           name="id"
           placeholder="請輸入統一編號"
           required #id="ngModel" [disabled]="editAction">
-          <mat-error *ngIf="id.invalid && applicant.dirty">統一編號為必填欄位</mat-error>
+          <mat-error *ngIf="id.errors && id.errors.required">統一編號為必填欄位</mat-error>
+          <mat-error *ngIf="id.errors && !id.errors.required && id.errors.companyId">統一編號須為八位數字</mat-error>
         </mat-form-field>
+        <!-- <div *ngIf = "id.invalid && (id.dirty || id.touched)" class="alert alert-danger">
+            <mat-error *ngIf="id.errors && id.errors.required">統一編號為必填欄位</mat-error>
+            <mat-error *ngIf="id.errors && !id.errors.required && id.errors.companyId">統一編號須為八位數字</mat-error>
+        </div> -->
         </td>
         <td><span class="required-field">*</span>負責人</td>
         <td>
@@ -104,7 +109,7 @@
           name="owner"
           placeholder="請輸入姓名"
           required #owner="ngModel">
-          <mat-error *ngIf="owner.invalid && applicant.dirty">負責人為必填欄位</mat-error>
+          <mat-error *ngIf="owner.invalid">負責人為必填欄位</mat-error>
         </mat-form-field>
         </td>
       </tr>
@@ -118,7 +123,7 @@
           name="address"
           placeholder="請輸入公司地址"
           required #address="ngModel">
-          <mat-error *ngIf="address.invalid && applicant.dirty">地址為必填欄位</mat-error>
+          <mat-error *ngIf="address.invalid">地址為必填欄位</mat-error>
         </mat-form-field>
         </td>
       </tr>
@@ -126,12 +131,16 @@
         <td>電話</td>
         <td>
         <mat-form-field appearance="outline">
-          <input matInput type="tel" [(ngModel)]="vendor.tel"
+          <input matInput [(ngModel)]="vendor.tel" telValidator="vendor.tel"
           class="form-control"
           id="tel"
           name="tel"
-          #tel="ngModel" tel>
+          type="text"
+          placeholder="ex: 02-12345678"
+          #tel="ngModel">
+          <mat-error *ngIf="tel.value && tel.errors && tel.errors.telNumber">電話格式錯誤</mat-error>
         </mat-form-field>
+
         </td>
         <td>傳真</td>
         <td>
@@ -161,7 +170,7 @@
 
     <!-- contact info -->
     <div>
-      <h2 class="form-section-header">聯絡人</h2>
+      <h2 class="form-section-header"><span class="required-field">*</span>聯絡人</h2>
       <table mat-table #contactsTable [dataSource]="contacts" class="mat-elevation-z8 section-layout">
 
         <!-- name -->
@@ -213,7 +222,7 @@
     <br>
     <br>
     <div class="form-action">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!vendorForm.form.valid || contacts.length == 1">儲存</button>
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit(); vendorForm.reset()" [disabled]="!vendorForm.form.valid || contacts.length == 1">儲存</button>
       <a mat-raised-button color="accent" (click)="vendorForm.reset();resetContacts()">清空重填</a>
     </div>
   </form>
