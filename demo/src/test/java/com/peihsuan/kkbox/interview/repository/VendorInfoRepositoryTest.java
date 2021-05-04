@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +43,7 @@ public class VendorInfoRepositoryTest {
 			int vendorBefore = vendorInfoRepository.getVendorCount();
 			int contactBefore = vendorInfoRepository.findContacts(99999999).size();
 			assertEquals(contactBefore, 0);
-			VendorInfo vendorInfo = new VendorInfo(99999999, "test_name", "test", "test", "test", "test", "test", "test", new Date());
+			VendorInfo vendorInfo = new VendorInfo(99999999, "test_name", "test", "test", "test");
 			vendorInfoRepository.saveVendorInfo(vendorInfo);
 			List<ContactInfo> contacts = new ArrayList<>();
 			contacts.add(new ContactInfo("contact1", "yoyo", "1234", "eee@eee.com"));
@@ -52,7 +51,7 @@ public class VendorInfoRepositoryTest {
 			int[] batchInsert = vendorInfoRepository.saveContacts(contacts, 99999999, "test_name");
 			assertEquals(batchInsert.length, contacts.size());
 			int vendorAfter = vendorInfoRepository.getVendorCount();
-			int contactAfter = vendorInfoRepository.findContacts(1234567).size();
+			int contactAfter = vendorInfoRepository.findContacts(12345678).size();
 			assertEquals(vendorAfter - vendorBefore, 1);
 			assertEquals(contactAfter - contactBefore, contacts.size());
 		} catch (Exception e) {
@@ -63,11 +62,11 @@ public class VendorInfoRepositoryTest {
 	@Test
 	public void testUpdateVendorInfo() {
 		try {
-			VendorInfo vendor = vendorInfoRepository.find(1234567);
+			VendorInfo vendor = vendorInfoRepository.find(12345678);
 			assertEquals(vendor.getApplicant(), "John Doe");
 			vendor.setApplicant("testChange");
 			assertTrue(vendorInfoRepository.updateVendorInfo(vendor) == 1);
-			vendor = vendorInfoRepository.find(1234567);
+			vendor = vendorInfoRepository.find(12345678);
 			assertEquals(vendor.getApplicant(), "testChange");
 		} catch (Exception e) {
 			fail(e.getMessage());
@@ -77,7 +76,7 @@ public class VendorInfoRepositoryTest {
 	@Test
 	public void testUpdateContactInfo() {
 		try {
-			List<ContactInfo> contacts = vendorInfoRepository.findContacts(1234567);
+			List<ContactInfo> contacts = vendorInfoRepository.findContacts(12345678);
 			assertEquals(contacts.get(0).getContactPerson(), "John A");
 			assertEquals(contacts.get(1).getContactPerson(), "John B");
 			contacts.get(0).setContactPerson("contact1");
@@ -86,7 +85,7 @@ public class VendorInfoRepositoryTest {
 			int[] update = vendorInfoRepository.updateContacts(contacts);
 			assertEquals(update.length, contacts.size());
 
-			contacts = vendorInfoRepository.findContacts(1234567);
+			contacts = vendorInfoRepository.findContacts(12345678);
 			assertEquals(contacts.get(0).getContactPerson(), "contact1");
 			assertEquals(contacts.get(1).getContactPerson(), "contact2");
 		} catch (Exception e) {
@@ -98,11 +97,11 @@ public class VendorInfoRepositoryTest {
 	public void testDeleteVendorInfo() {
 		try {
 			assertEquals(vendorInfoRepository.getVendorCount(), 2);
-			assertEquals(vendorInfoRepository.findContacts(1234567).size(), 2);
-			int deleteCount = vendorInfoRepository.deleteVendorInfo(1234567);
+			assertEquals(vendorInfoRepository.findContacts(12345678).size(), 2);
+			int deleteCount = vendorInfoRepository.deleteVendorInfo(12345678);
 			assertEquals(deleteCount, 1);
 			assertEquals(vendorInfoRepository.getVendorCount(), 1);
-			assertEquals(vendorInfoRepository.findContacts(1234567).size(), 0);
+			assertEquals(vendorInfoRepository.findContacts(12345678).size(), 0);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -111,13 +110,13 @@ public class VendorInfoRepositoryTest {
 	@Test
 	public void testDeleteContactInfo() {
 		try {
-			assertEquals(vendorInfoRepository.findContacts(1234567).size(), 2);
+			assertEquals(vendorInfoRepository.findContacts(12345678).size(), 2);
 			List<ContactInfo> toDelete = new ArrayList<>();
-			toDelete.add(vendorInfoRepository.findContacts(1234567).get(1));
+			toDelete.add(vendorInfoRepository.findContacts(12345678).get(1));
 			int[] deleteCount = vendorInfoRepository.deleteContacts(toDelete);
 			assertEquals(deleteCount.length, 1);
-			assertEquals(vendorInfoRepository.findContacts(1234567).size(), 1);
-			assertEquals(vendorInfoRepository.findContacts(1234567).get(0).getId(), Integer.valueOf(1));
+			assertEquals(vendorInfoRepository.findContacts(12345678).size(), 1);
+			assertEquals(vendorInfoRepository.findContacts(12345678).get(0).getId(), Integer.valueOf(1));
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

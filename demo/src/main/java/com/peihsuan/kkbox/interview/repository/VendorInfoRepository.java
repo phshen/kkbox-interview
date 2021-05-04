@@ -29,15 +29,6 @@ public class VendorInfoRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	// private final ResultSetExtractor<List<VendorInfo>> resultSetExtractor =
-	// JdbcTemplateMapperFactory.newInstance()
-	// .addKeys("id") // the column name you expect the user id to be on
-	// .newResultSetExtractor(VendorInfo.class);
-//	private final ResultSetExtractorImpl<Pair<VendorInfo, List<ContactInfo>>> resultSetExtractor = JdbcTemplateMapperFactory.newInstance()
-//			.addKeys("id", "compid") // the column name you expect the user id to be on
-//			.unorderedJoin()
-//			.newResultSetExtractor(new TypeReference<Pair<VendorInfo, List<ContactInfo>>>(){});
-
 	VendorInfoMapper vendorInfoMapper = new VendorInfoMapper();
 	ContactInfoMapper contactInfoMapper = new ContactInfoMapper();
 	private final ResultSetExtractor<List<VendorInfo>> resultSetExtractor = new ResultSetExtractor<List<VendorInfo>>() {

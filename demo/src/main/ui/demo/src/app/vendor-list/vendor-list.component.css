@@ -35,9 +35,7 @@ table {
 }
 .form-section-header {
   text-align: center;
-}
-.address-field-width {
-  width: 83%;
+  margin-top: 1em;
 }
 .title-layout {
   text-align: center;
@@ -48,4 +46,11 @@ table {
 }
 .dialog-action-btn {
   justify-content: flex-end;
+}
+.mat-form-field {
+  display: block;
+  margin-right: 10em;
+}
+.form-table-layout {
+  margin-left: 5%;
 }

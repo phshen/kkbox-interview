@@ -1,6 +1,5 @@
 package com.peihsuan.kkbox.interview.model;
 
-import java.util.Date;
 import java.util.List;
 
 public class VendorInfo {
@@ -12,14 +11,14 @@ public class VendorInfo {
 	private String tel;
 	private String fax;
 	private String remark;
-	private Date updateTime;
+	private String updateTime;
 	
 	private List<ContactInfo> contacts;
 
 	public VendorInfo() {
 	};
 	public VendorInfo(long id, String name, String applicant, String owner, String address, String tel, String fax,
-			String remark, Date updateTime) {
+			String remark, String updateTime) {
 		this.id = id;
 		this.name = name;
 		this.applicant = applicant;
@@ -29,6 +28,14 @@ public class VendorInfo {
 		this.fax = fax;
 		this.remark = remark;
 		this.updateTime = updateTime;
+	}
+
+	public VendorInfo(long id, String name, String applicant, String owner, String address) {
+		this.id = id;
+		this.name = name;
+		this.applicant = applicant;
+		this.owner = owner;
+		this.address = address;
 	}
 
 	public long getId() {
@@ -95,11 +102,11 @@ public class VendorInfo {
 		this.remark = remark;
 	}
 
-	public Date getUpdateTime() {
+	public String getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
 

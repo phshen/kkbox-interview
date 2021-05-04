@@ -13,73 +13,49 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.peihsuan.kkbox.interview.dao.VendorInfoService;
-import com.peihsuan.kkbox.interview.model.ContactInfo;
+import com.peihsuan.kkbox.interview.dao.VendorInfoDao;
 import com.peihsuan.kkbox.interview.model.VendorInfo;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class VendorInfoRestController {
 
-	private final VendorInfoService vendorInfoService;
+	private final VendorInfoDao vendorInfoDao;
 
 	@Autowired
-	public VendorInfoRestController(VendorInfoService vendorInfoService) {
-		this.vendorInfoService = vendorInfoService;
+	public VendorInfoRestController(VendorInfoDao vendorInfoDao) {
+		this.vendorInfoDao = vendorInfoDao;
 	}
 
 	@GetMapping("/vendors")
 	public List<VendorInfo> vendors() {
-		return vendorInfoService.getVendors();
-	}
-
-	@GetMapping("/contacts")
-	public List<ContactInfo> contactsById(@RequestParam("companyId") long companyId) {
-		return vendorInfoService.getContacts(companyId);
+		return vendorInfoDao.getVendors();
 	}
 
 	@PostMapping("/saveVendor")
 	public ResponseEntity<?> saveVendor(@RequestBody VendorInfo vendor) {
 		try {
-			vendorInfoService.saveVendor(vendor, vendor.getContacts());
+			vendorInfoDao.saveVendor(vendor, vendor.getContacts());
 		} catch (DuplicateKeyException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Company ID already exists.");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(vendorInfoService.getVendors());
+		return ResponseEntity.status(HttpStatus.OK).body(vendorInfoDao.getVendors());
 	}
-
-	// @PostMapping("/saveContacts")
-	// public Integer saveContacts(@RequestBody List<ContactInfo> contacts) {
-	// vendorInfoService.saveContacts(contacts);
-	// return contacts.size();
-	// }
 
 	@PutMapping("/updateVendor")
 	public List<VendorInfo> updateVendor(@RequestBody VendorInfo vendor) {
-		vendorInfoService.updateVendor(vendor);
-		return vendorInfoService.getVendors();
-	}
-
-	@PutMapping("/updateContacts")
-	public List<VendorInfo> updateContacts(@RequestBody List<ContactInfo> contacts) {
-		vendorInfoService.updateContacts(contacts);
-		return vendorInfoService.getVendors();
+		vendorInfoDao.updateVendor(vendor);
+		return vendorInfoDao.getVendors();
 	}
 
 	@DeleteMapping("/deleteVendor/{vendorId}")
 	public List<VendorInfo> deleteVendor(@PathVariable("vendorId") long vendorId) {
-		vendorInfoService.deleteVendor(vendorId);
-		return vendorInfoService.getVendors();
+		vendorInfoDao.deleteVendor(vendorId);
+		return vendorInfoDao.getVendors();
 	}
 
-	@PutMapping("/deleteContacts")
-	public List<VendorInfo> deleteContacts(@RequestBody List<ContactInfo> contacts) {
-		vendorInfoService.deleteContacts(contacts);
-		return vendorInfoService.getVendors();
-	}
 }

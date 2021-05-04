@@ -12,13 +12,13 @@ import com.peihsuan.kkbox.interview.model.VendorInfo;
 import com.peihsuan.kkbox.interview.repository.VendorInfoRepository;
 
 @Service
-public class VendorInfoService {
-	private Logger logger = LogManager.getLogger(VendorInfoService.class.getName());
+public class VendorInfoDao {
+	private Logger logger = LogManager.getLogger(VendorInfoDao.class.getName());
 
 	private VendorInfoRepository vendorInfoRepository;
 
 	@Autowired
-	public VendorInfoService(VendorInfoRepository vendorInfoRepository) {
+	public VendorInfoDao(VendorInfoRepository vendorInfoRepository) {
 		this.vendorInfoRepository = vendorInfoRepository;
 	}
 	

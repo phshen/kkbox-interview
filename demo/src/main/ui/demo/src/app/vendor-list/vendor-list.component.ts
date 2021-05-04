@@ -68,7 +68,6 @@ export class VendorListComponent implements OnInit {
   /***** form *****/
   onSubmit() {
     console.log(this.vendor, this.contacts);
-    if(!this.checkFormat(this.vendor.id)) return;
     this.contacts.pop(); // remove empty row
     this.vendor.contacts = this.contacts;
     if(!this.editAction) {
@@ -94,18 +93,13 @@ export class VendorListComponent implements OnInit {
           this.vendors = data;
           this.vendorListTable!.renderRows();
           this.editAction = false;
+          window.alert("儲存成功");
+      }, error => {
+        console.log(error);
+        window.alert(error.error);
       });
     }
     this.resetContacts();
-  }
-
-  checkFormat(id: string): boolean {
-    const regex = new RegExp('\\d{8}');
-    if(!regex.test(id)) {
-      window.alert("統一編號須為八位數字");
-      return false;
-    }
-    return true;
   }
 
   resetContacts() {
@@ -184,7 +178,7 @@ export class VendorListComponent implements OnInit {
 
 export function telValidator(nameRe: RegExp): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
-    const valid = control.pristine || (control.touched && control.value.length > 0 && nameRe.test(control.value));
+    const valid = control.pristine || (control.value.length > 0 && nameRe.test(control.value));
     return valid ? null : {telNumber: {value: control.value}};
   };
 }
@@ -204,7 +198,7 @@ export class TelValidatorDirective implements Validator {
 
 export function companyIdValidator(re: RegExp): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
-    const valid = control.pristine || (control.touched && control.value.length > 0 && re.test(control.value));
+    const valid = control.pristine || (control.value.length > 0 && re.test(control.value));
     return valid ? null : {companyId: {value: control.value}};
   };
 }
@@ -224,7 +218,7 @@ export class CompanyIdValidatorDirective implements Validator {
 
 export function phoneValidator(nameRe: RegExp): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
-    const valid = control.pristine || (control.touched && control.value.length > 0 && nameRe.test(control.value));
+    const valid = control.pristine || (control.value.length > 0 && nameRe.test(control.value));
     return valid ? null : {phoneNumber: {value: control.value}};
   };
 }
