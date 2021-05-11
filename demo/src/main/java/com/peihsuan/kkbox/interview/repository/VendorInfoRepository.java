@@ -38,9 +38,9 @@ public class VendorInfoRepository {
 				while (rs.next()) {
 					long id = rs.getInt("id");
 					ContactInfo contact = contactInfoMapper.mapRow(rs, rs.getRow());
+					VendorInfo vendor = vendorInfoMapper.mapRow(rs, rs.getRow());
+					vendor.setContacts(new ArrayList<ContactInfo>());
 					if (!vendorInfoMap.containsKey(id)) {
-						VendorInfo vendor = vendorInfoMapper.mapRow(rs, rs.getRow());
-						vendor.setContacts(new ArrayList<ContactInfo>());
 						vendorInfoMap.put(id, vendor);
 					}
 					vendorInfoMap.get(id).getContacts().add(contact);

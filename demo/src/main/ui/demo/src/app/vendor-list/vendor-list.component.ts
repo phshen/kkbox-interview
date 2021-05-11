@@ -5,7 +5,6 @@ import { ContactInfo } from '../model/contact-info';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-// import { FormControl, Validators } from '@angular/forms';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 @Component({
   selector: 'app-vendor-list',
@@ -15,10 +14,10 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorF
 export class VendorListComponent implements OnInit {
   @ViewChild('vendorListTable') vendorListTable?: MatTable<any>;
   @ViewChild('contactsTable') contactsTable?: MatTable<any>;
+
   // for list
   vendors: VendorInfo[] = [];
   displayedColumnsForList: string[] = ['id', 'name', 'tel', 'applicant', 'updateTime', 'action'];
-  // dataSource = new MatTableDataSource<VendorInfo>(this.vendors);
 
   // for form
   vendor: VendorInfo = new VendorInfo();
@@ -26,10 +25,6 @@ export class VendorListComponent implements OnInit {
   contacts: ContactInfo[] = [];
   displayedColumns: string[] = ['contactPerson', 'title', 'contactNumber', 'email', 'action'];
   editAction: boolean = false;
-
-  // phoneFormControl = new FormControl('', [
-  //   Validators.required, Validators.pattern('^\\([0-9]{2}\\)[0-9]{8}')
-  // ]);
 
   constructor(
     private vendorInfoService: VendorInfoService,
@@ -50,16 +45,11 @@ export class VendorListComponent implements OnInit {
       this.vendors = data;
       this.vendorListTable!.renderRows();
     });
-    // this.vendors.splice(rowIndex, 1);
-    // this.table!.renderRows();
   }
 
   showEditData(obj: VendorInfo, rowIndex: number) {
     const vendorCopy = JSON.parse(JSON.stringify(obj));
     this.vendor = vendorCopy;
-    // const contacts: ContactInfo[] = [];
-    // contacts.push(obj.contacts);
-    // contacts.push(new ContactInfo());
     this.contacts = this.vendor.contacts
     this.contacts.push(new ContactInfo());
     this.editAction = true;
@@ -157,7 +147,6 @@ export class VendorListComponent implements OnInit {
     styleUrls: ['./vendor-list.component.css']
   })
   export class ContactDialogComponent {
-    // contact: ContactInfo = new ContactInfo();
     constructor(
       public dialogRef: MatDialogRef<ContactDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: any

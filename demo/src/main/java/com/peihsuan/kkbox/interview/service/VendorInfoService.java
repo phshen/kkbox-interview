@@ -1,4 +1,4 @@
-package com.peihsuan.kkbox.interview.dao;
+package com.peihsuan.kkbox.interview.service;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import com.peihsuan.kkbox.interview.model.VendorInfo;
 import com.peihsuan.kkbox.interview.repository.VendorInfoRepository;
 
 @Service
-public class VendorInfoDao {
-	private Logger logger = LogManager.getLogger(VendorInfoDao.class.getName());
+public class VendorInfoService {
+	private Logger logger = LogManager.getLogger(VendorInfoService.class.getName());
 
 	private VendorInfoRepository vendorInfoRepository;
 
 	@Autowired
-	public VendorInfoDao(VendorInfoRepository vendorInfoRepository) {
+	public VendorInfoService(VendorInfoRepository vendorInfoRepository) {
 		this.vendorInfoRepository = vendorInfoRepository;
 	}
 	
@@ -32,7 +32,7 @@ public class VendorInfoDao {
 		vendorInfoRepository.saveContacts(contacts, vendor.getId(), vendor.getName());
 	}
 
-	public void saveContacts(List<ContactInfo> contacts) throws Exception {
+	private void saveContacts(List<ContactInfo> contacts) throws Exception {
 		logger.info("number of new contacts: {}", contacts.size());
 		int[] updateCount = vendorInfoRepository.saveContacts(contacts, contacts.get(0).getCompanyId(),
 				contacts.get(0).getCompanyName());
@@ -79,7 +79,7 @@ public class VendorInfoDao {
 		}
 	}
 
-	public Boolean deleteContacts(long companyId) {
+	private Boolean deleteContacts(long companyId) {
 		try {
 			logger.info("number of deleting exists contacts of company id: {}", companyId);
 			Integer currContactsCount = getContacts(companyId).size();

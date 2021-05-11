@@ -15,47 +15,47 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.peihsuan.kkbox.interview.dao.VendorInfoDao;
 import com.peihsuan.kkbox.interview.model.VendorInfo;
+import com.peihsuan.kkbox.interview.service.VendorInfoService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class VendorInfoRestController {
 
-	private final VendorInfoDao vendorInfoDao;
+	private final VendorInfoService vendorInfoService;
 
 	@Autowired
-	public VendorInfoRestController(VendorInfoDao vendorInfoDao) {
-		this.vendorInfoDao = vendorInfoDao;
+	public VendorInfoRestController(VendorInfoService vendorInfoService) {
+		this.vendorInfoService = vendorInfoService;
 	}
 
 	@GetMapping("/vendors")
 	public List<VendorInfo> vendors() {
-		return vendorInfoDao.getVendors();
+		return vendorInfoService.getVendors();
 	}
 
 	@PostMapping("/saveVendor")
 	public ResponseEntity<?> saveVendor(@RequestBody VendorInfo vendor) {
 		try {
-			vendorInfoDao.saveVendor(vendor, vendor.getContacts());
+			vendorInfoService.saveVendor(vendor, vendor.getContacts());
 		} catch (DuplicateKeyException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Company ID already exists.");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(vendorInfoDao.getVendors());
+		return ResponseEntity.status(HttpStatus.OK).body(vendorInfoService.getVendors());
 	}
 
 	@PutMapping("/updateVendor")
 	public List<VendorInfo> updateVendor(@RequestBody VendorInfo vendor) {
-		vendorInfoDao.updateVendor(vendor);
-		return vendorInfoDao.getVendors();
+		vendorInfoService.updateVendor(vendor);
+		return vendorInfoService.getVendors();
 	}
 
 	@DeleteMapping("/deleteVendor/{vendorId}")
 	public List<VendorInfo> deleteVendor(@PathVariable("vendorId") long vendorId) {
-		vendorInfoDao.deleteVendor(vendorId);
-		return vendorInfoDao.getVendors();
+		vendorInfoService.deleteVendor(vendorId);
+		return vendorInfoService.getVendors();
 	}
 
 }
