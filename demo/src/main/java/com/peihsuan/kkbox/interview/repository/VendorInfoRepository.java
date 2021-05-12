@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +116,7 @@ public class VendorInfoRepository {
 	}
 	
 	public Integer updateVendorInfo(VendorInfo vendorInfo) {
-		String sqlQuery = "update vendor_info set applicant = ?, owner = ?, address = ?, tel = ?, fax = ?, remark = ? where id = ? ";
+		String sqlQuery = "update vendor_info set applicant = ?, owner = ?, address = ?, tel = ?, fax = ?, remark = ?, update_time = ? where id = ? ";
 		return jdbcTemplate.update(sqlQuery, 
 				vendorInfo.getApplicant(),
 				vendorInfo.getOwner(),
@@ -123,6 +124,7 @@ public class VendorInfoRepository {
 				vendorInfo.getTel(),
 				vendorInfo.getFax(),
 				vendorInfo.getRemark(),
+				new Date(),
 				vendorInfo.getId());
 	}
 
